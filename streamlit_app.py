@@ -112,9 +112,14 @@ with col2:
     tamanho_pagina = st.number_input("Itens por página", min_value=10, value=500, step=10)
 with col3:
     usar_filtro_data = st.checkbox("Filtrar por data da compra", value=False)
+    
+    # Calcula dinamicamente um ano antes do momento atual em que a página é carregada
+    data_padrao_um_ano_atras = (pd.Timestamp.today() - pd.DateOffset(years=1)).date()
+    
     data_minima = st.date_input(
         "A partir de", 
-        value=pd.to_datetime("2024-01-01").date(), 
+        value=data_padrao_um_ano_atras, 
+        format="DD/MM/YYYY",  # Aplica a formatação desejada (DD/MM/YYYY)
         disabled=not usar_filtro_data
     )
 
