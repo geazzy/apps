@@ -153,8 +153,11 @@ if st.session_state.get('itens'):
 
             # Aplicação do filtro de data (processado após a obtenção dos dados)
             if usar_filtro_data and 'dataCompra' in df_completo.columns:
-                # Converte coluna para datetime (removendo fuso horário para evitar problemas de comparação)
-                df_completo['data_compra_dt'] = pd.to_datetime(df_completo['dataCompra'], errors='coerce').dt.tz_localize(None)
+                # Converte coluna para datetime (seguro para fuso horário com utc=True e tz_convert)
+                df_completo['data_compra_dt'] = pd.to_datetime(
+                    df_completo['dataCompra'], errors='coerce', utc=True
+                ).dt.tz_convert(None)
+                
                 data_limite_dt = pd.to_datetime(data_minima)
                 
                 # Filtra mantendo apenas registros maiores ou iguais à data estipulada
@@ -163,9 +166,12 @@ if st.session_state.get('itens'):
                 # Descarta a coluna temporária de data para manter o dataframe original
                 df_completo = df_completo.drop(columns=['data_compra_dt'])
 
-            # Verifica se restaram registros após o filtro
+            # Verifica se restaram registros após o filtro ou se a API retornou vazia
             if df_completo.empty:
-                st.warning("Nenhum item encontrado que atenda ao filtro de data nesta página.")
+                if usar_filtro_data:
+                    st.warning("Nenhum item encontrado que atenda ao filtro de data nesta página.")
+                else:
+                    st.warning("Nenhum item encontrado nesta página.")
             else:
                 # DataFrame de exibição: formata preços com ponto de milhar e vírgula decimal
                 df_exibicao = df_completo.map(
