@@ -70,7 +70,7 @@ deactivate
 
 Acesse diretamente pelo navegador, sem necessidade de instalação:
 
-**[https://suportedadoslivres.streamlit.app/](https://suportedadoslivres.streamlit.app/)**
+**[https://pesquisadepreco.streamlit.app/](https://pesquisadepreco.streamlit.app/)**
 
 ### Local
 
